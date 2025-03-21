@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:donut_app_2c_gaxiola/tabs/burger_tab.dart';
 import 'package:donut_app_2c_gaxiola/tabs/donut_tab.dart';
 import 'package:donut_app_2c_gaxiola/tabs/pancakes_tab.dart';
 import 'package:donut_app_2c_gaxiola/tabs/pizza_tab.dart';
 import 'package:donut_app_2c_gaxiola/tabs/smoothie_tab.dart';
 import 'package:donut_app_2c_gaxiola/utils/my_tab.dart';
-
-import 'package:flutter/material.dart';
+import 'package:donut_app_2c_gaxiola/providers/cart_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,6 +26,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return DefaultTabController(
       length: myTabs.length,
       child: Scaffold(
@@ -40,7 +43,6 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            // Texto Principal
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 36, vertical: 18),
               child: Row(
@@ -57,10 +59,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            // Pestañas (TabBar)
             TabBar(tabs: myTabs),
-
-            // Contenido de pestañas (TabBarView)
             Expanded(
               child: TabBarView(
                 children: [
@@ -72,58 +71,19 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-
-            // Carrito (Cart)
             Container(
               color: Colors.white,
               padding: const EdgeInsets.all(16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Información de los items y entrega
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "2 Items | \$45",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text("Delivery Charges Included"),
-                    ],
-                  ),
-                  // Botón mejorado para ver el carrito con icono y texto
+                  Text(
+                      "${cartProvider.itemCount} Items | \$${cartProvider.totalPrice.toStringAsFixed(2)}"),
                   ElevatedButton(
-                    onPressed: () {
-                      // Acción del botón
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pink, // Color personalizado
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 12,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.shopping_cart,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'View Cart',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                    onPressed: () {},
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.pink),
+                    child: const Text('View Cart'),
                   ),
                 ],
               ),
@@ -134,5 +94,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-//djsfmsdlfmsdf//
-//dmas,dmñasldmasl

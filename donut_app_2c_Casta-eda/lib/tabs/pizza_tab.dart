@@ -1,58 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Importa Provider
 import 'package:donut_app_2c_gaxiola/utils/donut_tile.dart';
+import 'package:donut_app_2c_gaxiola/providers/cart_provider.dart'; // Importa el proveedor del carrito
 
 class PizzaTab extends StatelessWidget {
-  // Lista de donas actualizada a 8 elementos
-  final List donutsOnSale = [
+  // Lista de pizzas
+  final List pizzasOnSale = [
     [
-      "Nuts Caramel",
-      "Dunkin's",
-      "36",
+      "Pizza Margarita",
+      "Pizza's",
+      "135",
       Colors.blue,
-      "lib/images/icecream_donut.png"
+      "lib/images/pizza_margarita.png"
     ],
     [
-      "Red Velvet",
-      "Dunkin's",
-      "45",
+      "Pizza Peperoni",
+      "Pizza's",
+      "135",
       Colors.red,
-      "lib/images/strawberry_donut.png"
+      "lib/images/pizza_peperoni.png"
     ],
-    ["Strawberry", "Dunkin's", "84", Colors.pink, "lib/images/grape_donut.png"],
     [
-      "Choco Tap",
-      "Dunkin's",
-      "95",
+      "Pizza Hawaiana",
+      "Pizza's",
+      "150",
+      Colors.pink,
+      "lib/images/pizza_hawaiana.png"
+    ],
+    [
+      "Pizza honolulu",
+      "Pizza's",
+      "150",
       Colors.brown,
-      "lib/images/chocolate_donut.png"
+      "lib/images/pizza_honolulu.png"
     ],
     [
-      "Vanilla Bliss",
-      "Dunkin's",
-      "50",
+      "Pizza surtida",
+      "Pizza's",
+      "150",
       Colors.yellow,
-      "lib/images/icecream_donut.png"
+      "lib/images/pizza_surtida.png"
     ],
     [
-      "Blueberry Frost",
-      "Dunkin's",
-      "70",
+      "Pizza Cheese",
+      "Pizza's",
+      "150",
       Colors.purple,
-      "lib/images/icecream_donut.png"
+      "lib/images/Pizza_cheese.png"
     ],
     [
-      "Glazed Original",
-      "Dunkin's",
-      "40",
+      "Pizza Vegetariana",
+      "Pizza's",
+      "150",
       Colors.orange,
-      "lib/images/icecream_donut.png"
+      "lib/images/pizza_vegetarian.png"
     ],
     [
-      "Cinnamon Delight",
-      "Dunkin's",
-      "65",
+      "Pizza Italiana",
+      "Pizza's",
+      "150",
       Colors.deepOrange,
-      "lib/images/icecream_donut.png"
+      "lib/images/pizza_italiana.png"
     ],
   ];
 
@@ -60,22 +68,39 @@ class PizzaTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return GridView.builder(
-      itemCount: donutsOnSale.length,
+      itemCount: pizzasOnSale.length,
       padding: const EdgeInsets.all(12),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Muestra 2 donas por fila
+        crossAxisCount: 2, // Muestra 2 pizzas por fila
         childAspectRatio: 1 / 1.5,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
+        double price = double.parse(pizzasOnSale[index][2]);
+
         return DonutTile(
-          donutFlavor: donutsOnSale[index][0],
-          donutName: donutsOnSale[index][1],
-          donutPrice: donutsOnSale[index][2],
-          donutColor: donutsOnSale[index][3],
-          imageName: donutsOnSale[index][4],
+          donutFlavor: pizzasOnSale[index][0],
+          donutName: pizzasOnSale[index][1],
+          donutPrice: pizzasOnSale[index][2],
+          donutColor: pizzasOnSale[index][3],
+          imageName: pizzasOnSale[index][4],
+          onTap: () {
+            // Agrega la pizza al carrito
+            cartProvider.addItem(price);
+
+            // Muestra un SnackBar confirmando la acción
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content:
+                    Text('${pizzasOnSale[index][0]} añadida al carrito 🛒'),
+                duration: const Duration(seconds: 1),
+              ),
+            );
+          },
         );
       },
     );

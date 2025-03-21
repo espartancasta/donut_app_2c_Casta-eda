@@ -1,58 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Importa Provider
 import 'package:donut_app_2c_gaxiola/utils/donut_tile.dart';
+import 'package:donut_app_2c_gaxiola/providers/cart_provider.dart'; // Importa el proveedor del carrito
 
 class BurgerTab extends StatelessWidget {
-  // Lista de donas actualizada a 8 elementos
-  final List donutsOnSale = [
+  // Lista de hamburguesas
+  final List burgersOnSale = [
     [
-      "Nuts Caramel",
-      "Dunkin's",
-      "36",
-      Colors.blue,
-      "lib/images/icecream_donut.png"
-    ],
-    [
-      "Red Velvet",
-      "Dunkin's",
-      "45",
-      Colors.red,
-      "lib/images/strawberry_donut.png"
-    ],
-    ["Strawberry", "Dunkin's", "84", Colors.pink, "lib/images/grape_donut.png"],
-    [
-      "Choco Tap",
-      "Dunkin's",
-      "95",
-      Colors.brown,
-      "lib/images/chocolate_donut.png"
-    ],
-    [
-      "Vanilla Bliss",
-      "Dunkin's",
-      "50",
-      Colors.yellow,
-      "lib/images/icecream_donut.png"
-    ],
-    [
-      "Blueberry Frost",
-      "Dunkin's",
-      "70",
-      Colors.purple,
-      "lib/images/icecream_donut.png"
-    ],
-    [
-      "Glazed Original",
-      "Dunkin's",
-      "40",
-      Colors.orange,
-      "lib/images/icecream_donut.png"
-    ],
-    [
-      "Cinnamon Delight",
-      "Dunkin's",
+      "Hamburguesa Sencilla",
+      "Burger's",
       "65",
+      Colors.blue,
+      "lib/images/Burger_sencilla.png"
+    ],
+    [
+      "Hamburguesa DOBLE",
+      "Burger's",
+      "95",
+      Colors.red,
+      "lib/images/Burger_doble.png"
+    ],
+    [
+      "Hamburguesa TRIPLE",
+      "Burger's",
+      "115",
+      Colors.pink,
+      "lib/images/Burger_triple.png"
+    ],
+    [
+      "Hamburguesa Krispy",
+      "Burger's",
+      "85",
+      Colors.brown,
+      "lib/images/Burger_krispy.png"
+    ],
+    [
+      "Hamburguesa/arros",
+      "Burger's",
+      "85",
+      Colors.yellow,
+      "lib/images/Burger_onion.png"
+    ],
+    [
+      "Hamburguesa/Tocino",
+      "Burger's",
+      "85",
+      Colors.purple,
+      "lib/images/Burger_tocino.png"
+    ],
+    [
+      "Hamburguesa Vegetariana",
+      "Burger's",
+      "85",
+      Colors.orange,
+      "lib/images/Burger_vegetarian.png"
+    ],
+    [
+      "Paquete Hamburguesa",
+      "Burger's",
+      "120",
       Colors.deepOrange,
-      "lib/images/icecream_donut.png"
+      "lib/images/Burger_Packet.png"
     ],
   ];
 
@@ -60,24 +68,49 @@ class BurgerTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      itemCount: donutsOnSale.length,
-      padding: const EdgeInsets.all(12),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Muestra 2 donas por fila
-        childAspectRatio: 1 / 1.5,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+    final cartProvider = Provider.of<CartProvider>(context);
+
+    return SingleChildScrollView(
+      child: GridView.builder(
+        shrinkWrap: true, // Evita conflictos de scroll
+        physics:
+            const NeverScrollableScrollPhysics(), // Usa solo el scroll padre
+        itemCount: burgersOnSale.length,
+        padding: const EdgeInsets.all(12),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, // Dos hamburguesas por fila
+          childAspectRatio: 1 / 1.6, // Ajuste para evitar overflow
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        itemBuilder: (context, index) {
+          double price = double.parse(burgersOnSale[index][2]);
+
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(12), // Bordes redondeados
+            child: DonutTile(
+              donutFlavor: burgersOnSale[index][0],
+              donutName: burgersOnSale[index][1],
+              donutPrice: burgersOnSale[index][2],
+              donutColor: burgersOnSale[index][3],
+              imageName: burgersOnSale[index][4],
+              onTap: () {
+                // Agrega la hamburguesa al carrito
+                cartProvider.addItem(price);
+
+                // Muestra un SnackBar confirmando la acción
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        '${burgersOnSale[index][0]} añadida al carrito 🛒'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+            ),
+          );
+        },
       ),
-      itemBuilder: (context, index) {
-        return DonutTile(
-          donutFlavor: donutsOnSale[index][0],
-          donutName: donutsOnSale[index][1],
-          donutPrice: donutsOnSale[index][2],
-          donutColor: donutsOnSale[index][3],
-          imageName: donutsOnSale[index][4],
-        );
-      },
     );
   }
 }
